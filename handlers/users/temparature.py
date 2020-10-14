@@ -4,37 +4,33 @@ from aiogram.dispatcher.filters import Command
 from aiogram.types import Message, CallbackQuery
 
 from keyboards.inline.callback_datas import buy_callback, city_callback
-from keyboards.inline.choice_buttons import choice, today_keyboard, four_days_keyboard
+from keyboards.inline.choice_buttons import choice, today_keyboard
 from loader import dp, bot, api_gis
 
 
 @dp.message_handler(Command("help"))
 async def show_items(message: Message):
-    await message.answer(text="Здорово", reply_markup=choice)
+    await message.answer(text="Привет, хочешь узнать прогноз погоды?", reply_markup=choice)
 
 
-# Попробуйем отловить по встроенному фильтру, где в нашем call.data содержится "pear"
-# @dp.callback_query_handler(text_contains="Сегодня")
+
 @dp.callback_query_handler(buy_callback.filter(date_temp="today"))
 async def one_day(call: CallbackQuery, callback_data: dict):
     await call.answer(cache_time=60)# время ожидания
-    # callback_data = call.data
+
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text='Выбирите город', reply_markup=today_keyboard)
-    # await call.message.answer(reply_markup=nizniy_keyboard)
+    await call.message.answer(text='Выберите город', reply_markup=today_keyboard)
 
 
-# Попробуем использовать фильтр от CallbackData
-@dp.callback_query_handler(buy_callback.filter(date_temp="four_days"))
-async def four_days(call: CallbackQuery, callback_data: dict):
-    await call.answer(cache_time=60)
-
-    # Выведем callback_data и тут, чтобы сравнить с предыдущим вариантом.
-    logging.info(f"{callback_data=}")
-
-    await call.message.answer("Погода в Нижнем Новгороде",
-                              reply_markup=four_days_keyboard)
+# @dp.callback_query_handler(buy_callback.filter(date_temp="four_days"))
+# async def four_days(call: CallbackQuery, callback_data: dict):
+#     await call.answer(cache_time=60)
+#
+#     logging.info(f"{callback_data=}")
+#
+#     await call.message.answer("Погода на 4 дня",
+#                               reply_markup=four_days_keyboard)
 
 
 @dp.callback_query_handler(city_callback.filter(city_name="moscow"))

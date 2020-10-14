@@ -1,18 +1,6 @@
+from loader import bot
 async def on_startup(dp):
-    import filters
-    import middlewares
-    filters.setup(dp)
-    middlewares.setup(dp)
-
-    # from utils.notify_admins import on_startup_notify
-    # await on_startup_notify(dp)
-
-
-# from loader import bot
-#
-#
-# async def on_startup(dp):
-#     await bot.close()
+    await bot.close()
 
 if __name__ == '__main__':
     from aiogram import executor
